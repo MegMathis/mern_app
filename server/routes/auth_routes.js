@@ -19,7 +19,10 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const user = await User.findOne({
     email: req.body.email,
-  }).populate("favorites");
+  }).populate({
+    path: "favorites",
+    populate: "user",
+  });
 
   // If no user is found, stop and send an error message
   if (!user)
@@ -51,7 +54,10 @@ router.get("/authenticated", async (req, res) => {
 
   if (!user_id) return res.send({ user: null });
 
-  const user = await User.findById(user_id).populate("favorites");
+  const user = await User.findById(user_id).populate({
+    path: "favorites",
+    populate: "user",
+  });
 
   res.send({ user: user });
 });

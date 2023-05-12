@@ -42,6 +42,8 @@ function Dashboard(props) {
     props.setUser(res.data.user);
   };
 
+  console.log(props.user.favorites);
+
   return (
     <main>
       <h1 className="text-center">Welcome, {props.user.username}!</h1>
@@ -94,6 +96,7 @@ function Dashboard(props) {
             <p>Category: {fav.category}</p>
             <p>Ingredients: {fav.ingredients}</p>
             <p>Instructions: {fav.instructions}</p>
+            <p>Added By: {fav.user.username}</p>
             <button onClick={() => removeFavorite(fav._id)}>
               Remove from favorites
             </button>
