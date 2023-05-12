@@ -2,15 +2,16 @@ const router = require("express").Router();
 const User = require("../models/User");
 
 // http://localhost:3333/auth/register
-// register User
+// Register User
 router.post("/register", async (req, res) => {
   try {
     const user = await User.create(req.body);
 
-    req.session.user_id = user._id; // logging user in
-    res.send(user.select("-password"));
+    req.session.user_id = user._id; // Logging the user in
+
+    res.send({ user });
   } catch (err) {
-    res.status(402).send({ error: err });
+    res.status(403).send({ error: err.message });
   }
 });
 
@@ -18,25 +19,25 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const user = await User.findOne({
     email: req.body.email,
-  });
+  }).populate("favorites");
 
-  //   If no user is found, stop and end an error message
+  // If no user is found, stop and send an error message
   if (!user)
-    return res.status(402).send({ error: "User with that email not found" });
+    return res.status(402).send({ error: "User with that email not found." });
 
-  //   if password does not match, stop and send an error message
+  // If password does not match, stop and send an error message
   const valid_password = await user.validatePass(req.body.password);
 
   if (!valid_password)
-    return res.status(401).send({ error: "Password does not match" });
+    return res.status(401).send({ error: "Password does not match." });
 
   // Log the user in
-  req.session.user_id = user._id;
+  req.session.user_id = user._id; // Logging the user in
 
-  res.send(user.select("-password"));
+  res.send({ user: user });
 });
 
-// log out user
+// Log out User
 router.get("/logout", (req, res) => {
   req.session.destroy();
 
@@ -52,7 +53,7 @@ router.get("/authenticated", async (req, res) => {
 
   const user = await User.findById(user_id).populate("favorites");
 
-  res.send({ user: user.select("-password") });
+  res.send({ user: user });
 });
 
 module.exports = router;

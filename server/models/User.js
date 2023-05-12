@@ -11,13 +11,13 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true, // removes whitespace
+    trim: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    validate: [validateEmail, "You must enter a valid email address"],
+    validate: [validateEmail, "You must enter a valid email address."],
   },
   password: {
     type: String,
@@ -31,6 +31,12 @@ const userSchema = new Schema({
     },
   ],
 });
+
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
+};
 
 userSchema.pre("save", async function (next) {
   if (this.isNew || this.isModified("password")) {

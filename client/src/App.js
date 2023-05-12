@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import axios from "axios";
 
 import Landing from "./pages/Landing";
@@ -12,9 +12,7 @@ function App() {
 
   useEffect(() => {
     axios.get("/auth/authenticated").then((res) => {
-      console.log((res) => {
-        setUser(res.data.user);
-      });
+      setUser(res.data.user);
     });
   }, []);
 
@@ -22,9 +20,32 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Landing />} />
-        {user && <Route path="/dashboard" element={<Dashboard />} />}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/dashboard"
+          element={
+            user ? (
+              <Dashboard setUser={setUser} user={user} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            !user ? <Login setUser={setUser} /> : <Navigate to="/dashboard" />
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            !user ? (
+              <Register setUser={setUser} />
+            ) : (
+              <Navigate to="/dashboard" />
+            )
+          }
+        />
       </Routes>
     </>
   );

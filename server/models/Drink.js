@@ -1,28 +1,28 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 const drinkSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   category: {
     type: String,
-    required: true,
+    required: true
   },
   ingredients: {
-    type: Array,
-    required: true,
+    type: String,
+    required: true
   },
   instructions: {
     type: String,
-    required: true,
+    required: true
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: "user",
-  },
+    ref: 'user'
+  }
 });
 
-const Drink = model("drink", drinkSchema);
+const Drink = model('drink', drinkSchema);
 
 module.exports = Drink;
