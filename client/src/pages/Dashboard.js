@@ -36,9 +36,15 @@ function Dashboard(props) {
     }
   };
 
+  const removeFavorite = async (fav_id) => {
+    const res = await axios.put("/api/fav/" + fav_id);
+
+    props.setUser(res.data.user);
+  };
+
   return (
     <main>
-      <h1>Welcome, {props.user.username}!</h1>
+      <h1 className="text-center">Welcome, {props.user.username}!</h1>
 
       <form onSubmit={handleSubmit}>
         <h2>Add a drink</h2>
@@ -78,7 +84,7 @@ function Dashboard(props) {
       </form>
 
       {props.user && props.user.favorites.length && (
-        <p>Here are your stored favorite drinks:</p>
+        <h2 className="text-center">Favorites</h2>
       )}
 
       <div className="favorites">
@@ -88,7 +94,9 @@ function Dashboard(props) {
             <p>Category: {fav.category}</p>
             <p>Ingredients: {fav.ingredients}</p>
             <p>Instructions: {fav.instructions}</p>
-            <button>Remove from favorites</button>
+            <button onClick={() => removeFavorite(fav._id)}>
+              Remove from favorites
+            </button>
           </div>
         ))}
       </div>

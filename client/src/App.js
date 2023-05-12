@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import axios from "axios";
 
+import Header from "./components/Header";
+
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -18,8 +20,10 @@ function App() {
 
   return (
     <>
+      <Header user={user} setUser={setUser} />
+
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Landing user={user} setUser={setUser} />} />
         <Route
           path="/dashboard"
           element={
